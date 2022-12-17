@@ -1,4 +1,6 @@
 import React from "react";
+import Login from "../components/authentication/Login";
+import Signup from "../components/authentication/Signup";
 import {
   Box,
   Container,
@@ -15,7 +17,7 @@ const HomePage = () => {
     <Container
       display={"flex"}
       maxWidth={["3xl", "4xl", "5xl", "6xl"]}
-      flexDirection={["column", "column", "column", "row"]}
+      flexDirection={["column", "column", "row", "row"]}
     >
       <Text
         fontSize={["6xl", "7xl", "8xl"]}
@@ -23,7 +25,7 @@ const HomePage = () => {
         color={"white"}
         width="90%"
         textAlign={"center"}
-        alignSelf={["center", "center", "center", "auto"]}
+        alignSelf={["center", "center", "auto", "auto"]}
       >
         Baat
       </Text>
@@ -34,7 +36,7 @@ const HomePage = () => {
         p={[3, 4]}
         borderRadius="lg"
         borderWidth="1px"
-        alignSelf={["center", "center", "center", "auto"]}
+        alignSelf={["center", "center", "auto", "auto"]}
         m={["30px", "40px", "60px", "70px"]}
       >
         <Tabs w="100%" variant="soft-rounded" colorScheme="pink">
@@ -44,10 +46,10 @@ const HomePage = () => {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <p>one!</p>
+              <Login />
             </TabPanel>
             <TabPanel>
-              <p>two!</p>
+              <Signup />
             </TabPanel>
           </TabPanels>
         </Tabs>
