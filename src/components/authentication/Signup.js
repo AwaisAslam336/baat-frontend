@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
 import {
   VStack,
   FormControl,
@@ -7,6 +9,7 @@ import {
   InputGroup,
   InputRightElement,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 
 const Signup = () => {
@@ -16,10 +19,97 @@ const Signup = () => {
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [pic, setPic] = useState();
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+  const history = useHistory();
 
   const handleClick = () => setShow(!show);
-  const postDetails = (pic) => {};
-  const submitHandler = () => {};
+
+  const postDetails = (pic) => {
+    setLoading(true);
+    if (pic === undefined) {
+      toast({
+        title: "Please Select an Image!",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+    if (pic.type === "image/jpeg" || pic.type === "image/png") {
+      setPic(pic);
+      setLoading(false);
+      return;
+    } else {
+      toast({
+        title: "Please Select an Image!",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+  };
+  const submitHandler = async () => {
+    setLoading(true);
+
+    if (!name || !email || !password || !confirmPassword) {
+      toast({
+        title: "Please fill all the fields.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast({
+        title: "Password do not match.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("pic", pic);
+
+      const data = await axios({
+        method: "post",
+        url: "/api/user",
+        data: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log(data);
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      setLoading(false);
+      history.push("/chats");
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description: error.response.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+    }
+  };
 
   return (
     <VStack spacing={"5px"} color="black">
@@ -86,6 +176,7 @@ const Signup = () => {
         width="100%"
         style={{ margin: 15 }}
         onClick={submitHandler}
+        isLoading={loading}
       >
         Sign Up
       </Button>
