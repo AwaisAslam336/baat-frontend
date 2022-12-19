@@ -88,13 +88,12 @@ const Signup = () => {
       formData.append("password", password);
       formData.append("pic", pic);
 
-      const data = await axios({
+      const { data } = await axios({
         method: "post",
         url: "/api/user",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
       history.push("/chats");
