@@ -1,24 +1,31 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { ChatState } from "../context/ChatProvider";
+import { Box, Flex, Spacer } from "@chakra-ui/react";
+import Header from "../components/chatPageComponents/header/Header";
+import MyChats from "../components/chatPageComponents/myChats/MyChats";
+import ChatBox from "../components/chatPageComponents/chatBox/ChatBox";
+import { useHistory } from "react-router-dom";
 
 const ChatPage = () => {
-  const [chats, setChats] = useState([]);
-
-  const fetchChats = async () => {
-    const { data } = await axios.get("api/chat");
-    setChats(data);
-  };
+  const { user } = ChatState();
+  const history = useHistory();
 
   useEffect(() => {
-    fetchChats();
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    if (userInfo === null || userInfo === undefined) {
+      history.push("/");
+    }
   }, []);
 
   return (
-    <div>
-      {chats.map((chat) => (
-        <div key={chat._id}>{chat.chatName}</div>
-      ))}
-    </div>
+    <Box w="100%">
+      {user && <Header />}
+      <Flex p="2rem">
+        {user && <MyChats />}
+        <Spacer />
+        {user && <ChatBox />}
+      </Flex>
+    </Box>
   );
 };
 

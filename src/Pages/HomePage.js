@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import Login from "../components/authentication/Login";
-import Signup from "../components/authentication/Signup";
+import Login from "../components/authenticationComponents/Login";
+import Signup from "../components/authenticationComponents/Signup";
 import {
   Box,
   Container,
@@ -18,10 +18,10 @@ const HomePage = () => {
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    if (userInfo) {
+    if (userInfo !== null && userInfo !== undefined) {
       history.push("/chats");
     }
-  }, [history]);
+  }, []);
 
   return (
     <Container
