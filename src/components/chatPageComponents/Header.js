@@ -1,8 +1,6 @@
 import React from "react";
 import "@fontsource/rowdies";
 import { Flex, Text } from "@chakra-ui/react";
-import SideDrawer from "./SideDrawer";
-import RightMenu from "./RightMenu";
 ///////////////////////////////
 import { Search2Icon } from "@chakra-ui/icons";
 //import "@fontsource/rowdies";
@@ -29,8 +27,8 @@ import {
   MenuItem,
   MenuDivider,
 } from "@chakra-ui/react";
-import { ChatState } from "../../../context/ChatProvider";
-import ProfileModal from "../../common/ProfileModal";
+import { ChatState } from "../../context/ChatProvider";
+import ProfileModal from "../common/ProfileModal";
 import { useHistory } from "react-router-dom";
 //////////////////////////////////////////////////
 
