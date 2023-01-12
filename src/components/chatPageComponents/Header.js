@@ -91,8 +91,9 @@ const Header = () => {
       };
       //access OR create&access new chat with selected user_id
       const { data } = await axios.post("api/chat", { user_id }, config);
+      console.log(data);
       //check if chat is newly created? then add it in chats state
-      if (chats && !chats.find((c) => c._id === data._id)) {
+      if (!chats.find((c) => c._id === data._id)) {
         setChats([data, ...chats]);
       }
 

@@ -20,7 +20,7 @@ const ChatPage = () => {
   return (
     <Box w="100%">
       {user && <Header />}
-      <Flex p="2rem">
+      <Flex p={3}>
         {user && <MyChats />}
         <Spacer />
         {user && <ChatBox />}
