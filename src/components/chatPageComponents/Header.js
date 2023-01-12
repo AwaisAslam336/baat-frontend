@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "@fontsource/rowdies";
-import { Flex, Text, useToast } from "@chakra-ui/react";
+import { Flex, Spinner, Text, useToast } from "@chakra-ui/react";
 ///////////////////////////////
 import { Search2Icon } from "@chakra-ui/icons";
 //import "@fontsource/rowdies";
@@ -37,12 +37,14 @@ import UserListItem from "./UserListItem";
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
-  const { user } = ChatState();
+  const { user, setSelectedChat, chats, setChats } = ChatState();
   const toast = useToast();
   const history = useHistory();
   const [search, setSearch] = useState();
   const [searchResult, setSearchResult] = useState();
   const [loading, setLoading] = useState();
+  const [loadingChat, setLoadingChat] = useState();
+
   //////////////////////
   async function handleSearch() {
     if (!search) {
@@ -70,6 +72,39 @@ const Header = () => {
       toast({
         title: "Error Occured",
         description: "Failed to load search results",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-left",
+      });
+    }
+  }
+  //////////////////////
+  async function accessChat(user_id) {
+    try {
+      setLoadingChat(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      //access OR create&access new chat with selected user_id
+      const { data } = await axios.post("api/chat", { user_id }, config);
+      //check if chat is newly created? then add it in chats state
+      if (chats && !chats.find((c) => c._id === data._id)) {
+        setChats([data, ...chats]);
+      }
+
+      setSelectedChat(data);
+      setLoadingChat(false);
+      //close the drawer
+      onClose();
+    } catch (error) {
+      setLoadingChat(false);
+      toast({
+        title: "Error fetching the chat",
+        description: error.message,
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -120,10 +155,15 @@ const Header = () => {
               ) : (
                 searchResult?.map((searchedUser) => {
                   return (
-                    <UserListItem key={searchedUser._id} user={searchedUser} />
+                    <UserListItem
+                      key={searchedUser._id}
+                      handleFunction={() => accessChat(searchedUser._id)}
+                      user={searchedUser}
+                    />
                   );
                 })
               )}
+              {loadingChat && <Spinner m={2} />}
             </DrawerBody>
           </DrawerContent>
         </Drawer>

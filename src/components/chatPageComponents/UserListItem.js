@@ -1,9 +1,10 @@
 import React from "react";
 import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
 
-const UserListItem = ({ user }) => {
+const UserListItem = ({ user, handleFunction }) => {
   return (
     <Flex
+      onClick={handleFunction}
       w={"100%"}
       px={3}
       py={2}
